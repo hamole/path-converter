@@ -1,0 +1,20 @@
+Collection Date:    16/09/16   11/10/16   12/10/16   
+Collection Time:    16:35      21:50      11:30      
+Lab Ref No:         160811225  160881030  160883009  
+Location:           KNS1       KNS1       KNS1       Units    Ref. Int.  
+Blood / Serum / Plasma
+
+Sodium                                    140        mmol/L   (135-145)
+Potassium                                 4.8#h1     mmol/L   (3.5-5.2)
+Chloride                                  102        mmol/L   (95-110)
+Bicarbonate                               27         mmol/L   (22-32)
+Urea                                      12.3 H     mmol/L   (2.5-7.8)
+Creatinine                                116 H      umol/L   (50-90)
+eGFR                                      38 L       mL/min   (>90)
+Albumin                                   35         g/L      (35-45)
+Calcium                                   2.25       mmol/L   (2.20-2.60)
+Corrected Ca                              2.35       mmol/L   (2.20-2.60)
+Magnesium                                 0.79       mmol/L   (0.74-1.03)
+Phosphate                                 1.15       mmol/L   (0.80-1.50)
+Creatine Kinase     25                               U/L      (0-190)
+Troponin I          0.02       0.02       0.01       ug/L     (0-0.080)
