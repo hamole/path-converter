@@ -1,0 +1,32 @@
+Patient:  7702799   Torcasio Leonilda MRS  
+Gender:  Female  / DOB:  10 Sep 1933 
+Patient Address:  8 Dickson Street Mount Waverley
+
+Result Details:  161075689 UMC 
+Collected:  09:40 20/12/16  / Reported:  21/12/2016 14:23
+Referred By:  GOBBO OLIVIA   ( 000392CK )  / Provider Number:  000392CK
+  
+ 
+--------------------------------------------------------------------------------
+RESULT:
+
+
+Southern Health
+
+    URINE MICROSCOPY AND CULTURE
+
+    Specimen Type   Urine (method of collection not stated)
+
+    Microscopy                            (Normal range)
+     Leucocytes:       >100 x10^6/L    (<10x10^6/L)
+     Erythrocytes:       10 x10^6/L       (<13x10^6/L)
+
+     Epithelial cells: ++ Squamous
+
+     Other:            +++ Bacteria
+
+    Culture
+
+      1.              Mixed growth
+
+    Suggest repeat specimen if clinically indicated.

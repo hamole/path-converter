@@ -1,1 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
+@import 'assets/styles/colors';
+@import '../node_modules/bootstrap/scss/bootstrap.scss';
+
+//App wide customisations
+@import "../src/assets/styles/card.scss";
+@import "../src/assets/styles/button.scss";
+
+body {
+  background-color: $app-background-color;
+}

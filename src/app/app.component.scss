@@ -1,0 +1,20 @@
+@import "../assets/styles/colors";
+
+.no-padding{
+  padding: 0;
+}
+
+.toolbar{
+  border-top: solid 1px $blue-grey-50;
+}
+
+textarea{
+  box-shadow: none;
+  outline: none;
+  border: none;
+  resize: none;
+  width: 100%;
+  min-height: 200px;
+  height: 100%;
+  padding: 8px;
+}

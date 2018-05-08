@@ -1,0 +1,15 @@
+@import "../../assets/styles/colors";
+
+.test-type{
+  border: solid 1px $blue-grey-100;
+  margin: 5px;
+  padding: 2.5px 8px;
+  user-select: none;
+  cursor: pointer;
+
+  &.active{
+    background-color: $app-accent-color;
+    color: white;
+    border: solid 1px $app-accent-color;
+  }
+}

@@ -1,0 +1,24 @@
+<div class="card">
+  <div class="card-header">
+    Settings
+  </div>
+  <div class="card-body">
+    <div class="custom-control custom-radio custom-control-inline">
+      <input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input" value="/t" ng-model="settingsService.delimiter">
+      <label class="custom-control-label" for="customRadioInline2">Spaces</label>
+    </div>
+    <div class="custom-control custom-radio custom-control-inline">
+      <input type="radio" id="customRadioInline1" name="customRadioInline1" class="custom-control-input" value=" " ng-model="settingsService.delimiter">
+      <label class="custom-control-label" for="customRadioInline1">TSV</label>
+    </div>
+    <hr/>
+    <div *ngIf="converterService.uniqueTestTypes.length > 0">Select test types:</div>
+    <div class="d-flex flex-wrap">
+      <div *ngFor="let testResult of converterService.testResults | testTypeFilter">
+        <div (click)="toggleTestResult(testResult.type)" class="test-type" [ngClass]="{'active': !testResult.type.isExcluded}">
+          {{testResult.type.name}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
