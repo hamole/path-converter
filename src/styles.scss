@@ -9,3 +9,9 @@
 body {
   background-color: $app-background-color;
 }
+
+.footer{
+  position: fixed;
+  bottom: 0;
+  color: $grey-700;
+}
