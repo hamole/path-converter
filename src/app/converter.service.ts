@@ -20,11 +20,16 @@ export class ConverterService {
     resultObject: ResultObject = { resultString: '' };
     uniqueTestTypes: Array<TestType> = [];
 
-    static getBloodTestDates(firstLine: string): string[] {
-        const datesString: string = (firstLine.slice(20));
-        const bloodTestDates: string[] = [];
+    static getBloodTestDates(dateLine: string, timeLine: string): Date[] {
+        const datesString: string = (dateLine.slice(20));
+        const timesString: string = (timeLine.slice(20));
+        const bloodTestDates: Date[] = [];
         for (let i = 0; i < datesString.length; i += 11) {
-            const date: string = datesString.slice(i, i + 8);
+            const dateS: string = datesString.slice(i, i + 8);
+            const dateParts: string[] = dateS.split('/');
+            const timeS: string = timesString.slice(i, i + 5);
+            const timeParts: string[] = timeS.split(':');
+            const date: Date = new Date(+`20${dateParts[2]}`, +dateParts[1], +dateParts[0],+timeParts[0], +timeParts[1])
             bloodTestDates.push(date);
         }
         return bloodTestDates;
@@ -58,14 +63,14 @@ export class ConverterService {
 
     processBlood() {
         const lines: string[] = this.inputObject.input.split('\n');
-        const bloodTestDates = ConverterService.getBloodTestDates(lines[0]);
+        const bloodTestDates = ConverterService.getBloodTestDates(lines[0],lines[1]);
         this.extractTestResults(lines, bloodTestDates);
         this.updateTestExcluded();
         this.shortenTestResultNames();
         this.buildResultString(this.testResults, bloodTestDates);
     }
 
-    extractTestResults(lines: string[], bloodTestDates: string[]) {
+    extractTestResults(lines: string[], bloodTestDates: Date[]) {
         for (let i = 6; i < lines.length; i++) {
             const bloodTestName: string = lines[i].slice(0, 20).trim();
             for (let j = 0; j < bloodTestDates.length; j++) {
@@ -101,14 +106,36 @@ export class ConverterService {
         });
     }
 
+    getDateString(date: Date, dates: Date[]){
+      let dateString = `${date.getDate()}/${date.getMonth()}`
+      for(const d of dates) {
+        if(d.toDateString() === date.toDateString() && d !== date){
+          dateString += ` @ ${date.getHours() > 10 ? date.getHours() : '0' + date.getHours()}:${date.getMinutes() > 10 ? date.getMinutes() : '0' + date.getMinutes()}`;
+          break;
+        }
+      }
+      return dateString + ':';
+    }
 
-    buildResultString(testResults: Array<TestResult>, dateStrings: string[]) {
-        for (let i = 0; i < dateStrings.length; i++) {
-            const testsByDate = _.filter(testResults, ['datePerformed', dateStrings[i]]);
+    sortDates(dates: Date[]): Date[] {
+      return dates.sort((a: Date, b: Date) => {
+        if(this.settingsService.sortDescending) {
+          return b.getTime() - a.getTime();
+        } else {
+          return a.getTime() - b.getTime();
+        }
+      });
+    }
+
+    buildResultString(testResults: Array<TestResult>, dates: Date[]) {
+      console.log(`Sort Descending: ${this.settingsService.sortDescending}`);
+        dates = this.sortDates(dates)
+        for (let i = 0; i < dates.length; i++) {
+            const testsByDate = _.filter(testResults, ['datePerformed', dates[i]]);
             if (i > 0) {
                 this.resultObject.resultString += '\n';
             }
-            this.resultObject.resultString += dateStrings[i] + this.settingsService.delimiter;
+            this.resultObject.resultString += this.getDateString(dates[i], dates) + this.settingsService.delimiter;
             for (let j = 0; j < testsByDate.length; j++) {
                 const testResult = testsByDate[j];
                 if (!testResult.type.isExcluded) {

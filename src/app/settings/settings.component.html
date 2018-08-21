@@ -3,14 +3,28 @@
     Settings
   </div>
   <div class="card-body">
-    <div class="custom-control custom-radio custom-control-inline">
-      <input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input" value="/t" ng-model="settingsService.delimiter">
-      <label class="custom-control-label" for="customRadioInline2">Spaces</label>
-    </div>
-    <div class="custom-control custom-radio custom-control-inline">
-      <input type="radio" id="customRadioInline1" name="customRadioInline1" class="custom-control-input" value=" " ng-model="settingsService.delimiter">
-      <label class="custom-control-label" for="customRadioInline1">TSV</label>
-    </div>
+    <fieldset>
+      <legend>Delimiter:</legend>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input" [value]="' '" checked="checked" [(ngModel)]="settingsService.delimiter">
+        <label class="custom-control-label" for="customRadioInline2">Spaces</label>
+      </div>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="customRadioInline1" name="customRadioInline1" class="custom-control-input" [value]="'&#9;'" [(ngModel)]="settingsService.delimiter">
+        <label class="custom-control-label" for="customRadioInline1">TSV</label>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Sort By Date:</legend>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="sortDeseendingTrue" name="sortDeseending" class="custom-control-input" checked="checked" [value]="true" [(ngModel)]="settingsService.sortDescending">
+        <label class="custom-control-label" for="sortDeseendingTrue">Descending</label>
+      </div>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="sortDeseendingFalse" name="sortDeseending" class="custom-control-input" [value]="false" [(ngModel)]="settingsService.sortDescending">
+        <label class="custom-control-label" for="sortDeseendingFalse">Ascending</label>
+      </div>
+    </fieldset>
     <hr/>
     <div *ngIf="converterService.uniqueTestTypes.length > 0">Select test types:</div>
     <div class="d-flex flex-wrap">
