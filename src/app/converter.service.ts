@@ -20,7 +20,6 @@ export class ConverterService {
     resultObject: ResultObject = { resultString: '' };
     uniqueTestTypes: Array<TestType> = [];
     sectionDate: Date[][] = [];
-    sectionRanges: Array<Array<number>> = [];
     sections: Array<number> = [];
     // Entry point to conversion
     convertPathologyResults() {
@@ -95,10 +94,6 @@ export class ConverterService {
         this.buildResultString(this.testResults);
     }
 
-    getTestDate(lineNumber,position): Date {
-      const testSection = this.getSectionforLine(lineNumber);
-      return this.sectionDate[testSection][position];
-    }
 
     validTest(testName, testValue): boolean{
       if(!testName || !testValue){
@@ -122,6 +117,7 @@ export class ConverterService {
       }
       return true;
     }
+    
     extractTestResults(lines: string[],sections: number[]) {
         for (let i = sections[0]; i < lines.length; i++) {
             const bloodTestName: string = lines[i].slice(0, 20).trim();
