@@ -19,20 +19,45 @@ export class ConverterService {
     inputObject: InputObject = { input: '' };
     resultObject: ResultObject = { resultString: '' };
     uniqueTestTypes: Array<TestType> = [];
+    sectionDate: Date[][] = [];
+    sectionRanges: Array<Array<number>> = [];
+    sections: Array<number> = [];
+    // Entry point to conversion
+    convertPathologyResults() {
+      this.testResults = [];
+      this.resultObject.resultString = '';
+      this.uniqueTestTypes = [];
+      if (ConverterService.isUrine(this.inputObject.input)) {
+        this.processUrine();
+      } else if (ConverterService.isBlood(this.inputObject.input)) {
+        this.processBlood();
+      }
+    }
 
-    static getBloodTestDates(dateLine: string, timeLine: string): Date[] {
-        const datesString: string = (dateLine.slice(20));
-        const timesString: string = (timeLine.slice(20));
-        const bloodTestDates: Date[] = [];
-        for (let i = 0; i < datesString.length; i += 11) {
-            const dateS: string = datesString.slice(i, i + 8);
-            const dateParts: string[] = dateS.split('/');
-            const timeS: string = timesString.slice(i, i + 5);
-            const timeParts: string[] = timeS.split(':');
-            const date: Date = new Date(+`20${dateParts[2]}`, +dateParts[1], +dateParts[0],+timeParts[0], +timeParts[1])
-            bloodTestDates.push(date);
+     getBloodTestDates(lines: string[], sections: number[]) {
+        for(let i = 0; i < sections.length - 1; i++)
+        {
+            this.sectionDate[i] = [];
+            const datesString: string = (lines[sections[i]].slice(20));
+            const timesString: string = (lines[sections[i]+1].slice(20));
+            for (let j = 0, k = 0; j < datesString.length; j += 11, k++) {
+              const dateS: string = datesString.slice(j, j + 8);
+              const dateParts: string[] = dateS.split('/');
+              const timeS: string = timesString.slice(j, j + 5);
+              const timeParts: string[] = timeS.split(':');
+              const date: Date = new Date(+`20${dateParts[2]}`, +dateParts[1], +dateParts[0],+timeParts[0], +timeParts[1])
+              this.sectionDate[i][k] = date;
+            }
         }
-        return bloodTestDates;
+    }
+
+    getSectionforLine(line: number): number{
+      for(let i = 0; i < this.sections.length - 1; i++){
+          if(line > this.sections[i] && line <= this.sections[i+1]){
+            return i;
+          }
+      }
+      return -1;
     }
 
     static isUrine(toBeConverted: string): boolean {
@@ -45,43 +70,74 @@ export class ConverterService {
 
     }
 
-    // Entry point to conversion
-    convertPathologyResults() {
-        this.testResults = [];
-        this.resultObject.resultString = '';
-        this.uniqueTestTypes = [];
-        if (ConverterService.isUrine(this.inputObject.input)) {
-            this.processUrine();
-        } else if (ConverterService.isBlood(this.inputObject.input)) {
-            this.processBlood();
-        }
-    }
-
     processUrine(): string {
         return 'urine';
     }
 
-    processBlood() {
-        const lines: string[] = this.inputObject.input.split('\n');
-        const bloodTestDates = ConverterService.getBloodTestDates(lines[0],lines[1]);
-        this.extractTestResults(lines, bloodTestDates);
-        this.updateTestExcluded();
-        this.shortenTestResultNames();
-        this.buildResultString(this.testResults, bloodTestDates);
+    getSectionIndexs(lines: string[]): Array<number> {
+      let indexs = [];
+      for(let i = 0; i < lines.length; i++){
+        if(_.includes(lines[i], 'Collection Date:')){
+          indexs.push(i);
+        }
+      }
+      indexs.push(lines.length - 1);
+      return indexs
     }
 
-    extractTestResults(lines: string[], bloodTestDates: Date[]) {
-        for (let i = 6; i < lines.length; i++) {
+    processBlood() {
+        const lines: string[] = this.inputObject.input.split('\n');
+        this.sections = this.getSectionIndexs(lines);
+        this.getBloodTestDates(lines, this.sections);
+        this.extractTestResults(lines,this.sections);
+        this.updateTestExcluded();
+        this.shortenTestResultNames();
+        this.buildResultString(this.testResults);
+    }
+
+    getTestDate(lineNumber,position): Date {
+      const testSection = this.getSectionforLine(lineNumber);
+      return this.sectionDate[testSection][position];
+    }
+
+    validTest(testName, testValue): boolean{
+      if(!testName || !testValue){
+        return false;
+      }
+      const nonTests = [
+        'Procedures completed',
+        'All othe',
+        'Report authorised by',
+        'Comments on laborato'
+      ]
+      const checkValue = testValue.replace(/[^\d.-]/g, '');
+      if(checkValue == '' || _.includes(testValue, ':') || _.includes(testName, ':') || isNaN(checkValue as any)){
+        return false;
+      }
+      if(/^\s/.test(testName)){
+        return false;
+      }
+      if(nonTests.indexOf(testName) > -1) {
+        return false;
+      }
+      return true;
+    }
+    extractTestResults(lines: string[],sections: number[]) {
+        for (let i = sections[0]; i < lines.length; i++) {
             const bloodTestName: string = lines[i].slice(0, 20).trim();
-            for (let j = 0; j < bloodTestDates.length; j++) {
+            const section = this.getSectionforLine(i);
+            if(section === -1) {
+              continue;
+            }
+            for (let j = 0; j < this.sectionDate[section].length; j++) {
                 const startPoint = 20 + j * 11;
                 const endPoint = startPoint + 11;
                 const bloodTestValue: string = lines[i].slice(startPoint, endPoint).trim();
-                if (bloodTestValue) {
+                if (this.validTest(bloodTestName,bloodTestValue)) {
                     const testResult: TestResult = {
                         type: { name: bloodTestName, isExcluded: false },
                         value: bloodTestValue,
-                        datePerformed: bloodTestDates[j]
+                        datePerformed: this.sectionDate[section][j]
                     };
                     this.testResults.push(testResult);
                 }
@@ -117,6 +173,22 @@ export class ConverterService {
       return dateString + ':';
     }
 
+    flattenDates(mdArray): Date[] {
+      let sArray: Date[] = [];
+      let compareArray =[];
+      for(var i = 0; i < mdArray.length; i++) {
+        for (let j = 0; j < mdArray[i].length; j++) {
+          if (compareArray.indexOf(mdArray[i][j].valueOf()) > -1) {
+            continue;
+          }
+          compareArray = compareArray.concat(mdArray[i][j].valueOf());
+        }
+      }
+      for(let i = 0; i < compareArray.length; i++){
+        sArray.push(new Date(compareArray[i]));
+      }
+      return sArray;
+    }
     sortDates(dates: Date[]): Date[] {
       return dates.sort((a: Date, b: Date) => {
         if(this.settingsService.sortDescending) {
@@ -127,9 +199,8 @@ export class ConverterService {
       });
     }
 
-    buildResultString(testResults: Array<TestResult>, dates: Date[]) {
-      console.log(`Sort Descending: ${this.settingsService.sortDescending}`);
-        dates = this.sortDates(dates)
+    buildResultString(testResults: Array<TestResult>) {
+        const dates = this.sortDates(this.flattenDates(this.sectionDate))
         for (let i = 0; i < dates.length; i++) {
             const testsByDate = _.filter(testResults, ['datePerformed', dates[i]]);
             if (i > 0) {
