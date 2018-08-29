@@ -11,7 +11,12 @@ import { TestResult } from '../models/test-result';
 export class SettingsService {
     delimiter = ' ';
     excludedTests: Array<string>;
+    sortDescending = true;
 
     constructor() {
+    }
+
+    toggleSort() {
+      this.sortDescending = !this.sortDescending;
     }
 }
