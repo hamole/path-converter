@@ -44,7 +44,7 @@ export class ConverterService {
               const dateParts: string[] = dateS.split('/');
               const timeS: string = timesString.slice(j, j + 5);
               const timeParts: string[] = timeS.split(':');
-              const date: Date = new Date(+`20${dateParts[2]}`, +dateParts[1], +dateParts[0],+timeParts[0], +timeParts[1])
+              const date: Date = new Date(+`20${dateParts[2]}`, +dateParts[1] - 1, +dateParts[0],+timeParts[0], +timeParts[1])
               this.sectionDate[i][k] = date;
             }
         }
@@ -109,15 +109,12 @@ export class ConverterService {
       if(checkValue == '' || _.includes(testValue, ':') || _.includes(testName, ':') || isNaN(checkValue as any)){
         return false;
       }
-      if(/^\s/.test(testName)){
-        return false;
-      }
       if(nonTests.indexOf(testName) > -1) {
         return false;
       }
       return true;
     }
-    
+
     extractTestResults(lines: string[],sections: number[]) {
         for (let i = sections[0]; i < lines.length; i++) {
             const bloodTestName: string = lines[i].slice(0, 20).trim();
@@ -159,7 +156,7 @@ export class ConverterService {
     }
 
     getDateString(date: Date, dates: Date[]){
-      let dateString = `${date.getDate()}/${date.getMonth()}`
+      let dateString = `${date.getDate()}/${date.getMonth() + 1}`
       for(const d of dates) {
         if(d.toDateString() === date.toDateString() && d !== date){
           dateString += ` @ ${date.getHours() > 10 ? date.getHours() : '0' + date.getHours()}:${date.getMinutes() > 10 ? date.getMinutes() : '0' + date.getMinutes()}`;
