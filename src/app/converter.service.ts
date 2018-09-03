@@ -33,6 +33,12 @@ export class ConverterService {
       }
     }
 
+    reset() {
+      this.testResults = [];
+      this.sectionDate = [];
+      this.sections = [];
+    }
+
      getBloodTestDates(lines: string[], sections: number[]) {
         for(let i = 0; i < sections.length - 1; i++)
         {
@@ -85,6 +91,7 @@ export class ConverterService {
     }
 
     processBlood() {
+        this.reset();
         const lines: string[] = this.inputObject.input.split('\n');
         this.sections = this.getSectionIndexs(lines);
         this.getBloodTestDates(lines, this.sections);
