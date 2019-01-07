@@ -11,6 +11,16 @@
     border-top: solid 1px $blue-grey-100;
     height: 45px;
   }
+  @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    /* IE10+ CSS styles go here */
+    .card-body {
+      display: flex;
+      flex-direction: column;
+      .toolbar {
+        margin-bottom: 1em;
+      }
+    }
+  }
 }
 
 .card-header {
