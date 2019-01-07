@@ -209,7 +209,7 @@ export class ConverterService {
       let resultString = '';
       let matches = this.settingsService.format.match(/\(.*?\)/g);
       matches = matches.map(function(match) { return match.slice(1, -1); })
-      for(let i = 0; i < matches.length; i++){
+      for (let i = 0; i < matches.length; i++){
         let found = [],          // an array to collect the strings that are found
           rxp = /{([^}]+)}/g,
           curMatch,
@@ -225,7 +225,7 @@ export class ConverterService {
             matchedCount += 1;
           }
         }
-        if(matchedCount == found.length) {
+        if(matchedCount === found.length) {
           resultString += matches[i] + this.settingsService.delimiter;
         }
       }
@@ -237,24 +237,26 @@ export class ConverterService {
         const dates = this.sortDates(this.flattenDates(this.sectionDate))
         for (let i = 0; i < dates.length; i++) {
             const testsByDate = _.filter(testResults, ['datePerformed', dates[i]]);
-            if (i > 0) {
-                this.resultObject.resultString += '\n';
-            }
-            this.resultObject.resultString += this.getDateString(dates[i], dates) + this.settingsService.delimiter;
-            if(this.settingsService.customFormatting) {
-              this.resultObject.resultString += this.customFormat(testsByDate)
+            if (this.settingsService.customFormatting) {
+              if (this.customFormat(testsByDate).trim().length > 0) {
+                this.resultObject.resultString += this.getDateString(dates[i], dates) + this.settingsService.delimiter;
+                this.resultObject.resultString += this.customFormat(testsByDate) + '\n';
+              }
             } else {
-              for (let j = 0; j < testsByDate.length; j++) {
-                const testResult = testsByDate[j];
-                if (!testResult.type.isExcluded) {
-                  this.resultObject.resultString += testResult.type.shortName + ' ' + testResult.value;
-                  if (j !== testsByDate.length - 1) {
-                    this.resultObject.resultString += this.settingsService.delimiter;
+              if (testsByDate.length > 0) {
+                this.resultObject.resultString += this.getDateString(dates[i], dates) + this.settingsService.delimiter;
+                for (let j = 0; j < testsByDate.length; j++) {
+                  const testResult = testsByDate[j];
+                  if (!testResult.type.isExcluded) {
+                    this.resultObject.resultString += testResult.type.shortName + ' ' + testResult.value;
+                    if (j !== testsByDate.length - 1) {
+                      this.resultObject.resultString += this.settingsService.delimiter;
+                    }
                   }
                 }
+                this.resultObject.resultString += '\n';
               }
             }
-
         }
     }
 }

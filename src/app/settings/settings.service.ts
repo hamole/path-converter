@@ -15,7 +15,7 @@ export class SettingsService {
     customFormatting = false;
     stripLH = false;
     format = `(FBE {Hb}/{WCC}/{Plt}) 
-(UEC {Na}/{K}/{Chlor} Cr{Creat})
+(UEC {Na}/{K}/{Chlor} Cr{Creat} eGFR{eGFR})
 (LFT {ALP}/{GGT}/{ALT} Bili {Bili})
 (CMP {Corr. Ca}/{Mg}/{Phos})
 (CRP {CRP})`;
@@ -46,7 +46,6 @@ export class SettingsService {
     }
 
     updateSettings(){
-      console.log('Got called');
       localStorage.setItem('delimiter', JSON.stringify(this.delimiter));
       if(this.excludedTests){
        localStorage.setItem('excludedTests', JSON.stringify(this.excludedTests));
