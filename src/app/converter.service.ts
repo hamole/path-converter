@@ -132,7 +132,13 @@ export class ConverterService {
             for (let j = 0; j < this.sectionDate[section].length; j++) {
                 const startPoint = 20 + j * 11;
                 const endPoint = startPoint + 11;
-                const bloodTestValue: string = lines[i].slice(startPoint, endPoint).trim();
+                let bloodTestValue: string = lines[i].slice(startPoint, endPoint).trim();
+                if(this.settingsService.stripLH){
+                  const end = bloodTestValue.slice(-1)
+                  if(end == 'L' || end == 'H'){
+                    bloodTestValue = bloodTestValue.slice(0,-1).trim();
+                  }
+                }
                 if (this.validTest(bloodTestName,bloodTestValue)) {
                     const testResult: TestResult = {
                         type: { name: bloodTestName, isExcluded: false },
@@ -199,6 +205,34 @@ export class ConverterService {
       });
     }
 
+    customFormat(tests) {
+      let resultString = '';
+      let matches = this.settingsService.format.match(/\(.*?\)/g);
+      matches = matches.map(function(match) { return match.slice(1, -1); })
+      for(let i = 0; i < matches.length; i++){
+        let found = [],          // an array to collect the strings that are found
+          rxp = /{([^}]+)}/g,
+          curMatch,
+          matchedCount = 0;
+
+        while( curMatch = rxp.exec( matches[i] ) ) {
+          found.push( curMatch[1] );
+        }
+        for (let j = 0; j < tests.length; j++) {
+          const testResult = tests[j];
+          if(matches[i].indexOf('{' + testResult.type.shortName + '}') !== -1){
+            matches[i] = matches[i].replace('{' + testResult.type.shortName + '}', testResult.value)
+            matchedCount += 1;
+          }
+        }
+        if(matchedCount == found.length) {
+          resultString += matches[i] + this.settingsService.delimiter;
+        }
+      }
+
+      return resultString;
+    }
+
     buildResultString(testResults: Array<TestResult>) {
         const dates = this.sortDates(this.flattenDates(this.sectionDate))
         for (let i = 0; i < dates.length; i++) {
@@ -207,15 +241,20 @@ export class ConverterService {
                 this.resultObject.resultString += '\n';
             }
             this.resultObject.resultString += this.getDateString(dates[i], dates) + this.settingsService.delimiter;
-            for (let j = 0; j < testsByDate.length; j++) {
+            if(this.settingsService.customFormatting) {
+              this.resultObject.resultString += this.customFormat(testsByDate)
+            } else {
+              for (let j = 0; j < testsByDate.length; j++) {
                 const testResult = testsByDate[j];
                 if (!testResult.type.isExcluded) {
-                    this.resultObject.resultString += testResult.type.shortName + ' ' + testResult.value;
-                    if (j !== testsByDate.length - 1) {
-                        this.resultObject.resultString += this.settingsService.delimiter;
-                    }
+                  this.resultObject.resultString += testResult.type.shortName + ' ' + testResult.value;
+                  if (j !== testsByDate.length - 1) {
+                    this.resultObject.resultString += this.settingsService.delimiter;
+                  }
                 }
+              }
             }
+
         }
     }
 }

@@ -19,7 +19,7 @@ export class ShortTypesService {
         'Platelet count': 'Plt',
         'Neutrophils': 'Neuts',
         'CRP (Sensitive)': 'CRP',
-        'Total Bilirubin': 'Bili'
+        'Total Bilirubin': 'Bili',
     };
 
     getShortType(testName: string) {

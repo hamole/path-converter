@@ -6,23 +6,36 @@
     <fieldset>
       <legend>Delimiter:</legend>
       <div class="custom-control custom-radio custom-control-inline">
-        <input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input" [value]="' '" checked="checked" [(ngModel)]="settingsService.delimiter">
+        <input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input" [value]="' '" checked="checked" [(ngModel)]="settingsService.delimiter" (ngModelChange)="settingsService.updateSettings()">
         <label class="custom-control-label" for="customRadioInline2">Spaces</label>
       </div>
       <div class="custom-control custom-radio custom-control-inline">
-        <input type="radio" id="customRadioInline1" name="customRadioInline1" class="custom-control-input" [value]="'&#9;'" [(ngModel)]="settingsService.delimiter">
+        <input type="radio" id="customRadioInline1" name="customRadioInline1" class="custom-control-input" [value]="'&#9;'" [(ngModel)]="settingsService.delimiter" (ngModelChange)="settingsService.updateSettings()">
         <label class="custom-control-label" for="customRadioInline1">TSV</label>
       </div>
     </fieldset>
     <fieldset>
       <legend>Sort By Date:</legend>
       <div class="custom-control custom-radio custom-control-inline">
-        <input type="radio" id="sortDeseendingTrue" name="sortDeseending" class="custom-control-input" checked="checked" [value]="true" [(ngModel)]="settingsService.sortDescending">
+        <input type="radio" id="sortDeseendingTrue" name="sortDeseending" class="custom-control-input" checked="checked" [value]="true" [(ngModel)]="settingsService.sortDescending" (ngModelChange)="settingsService.updateSettings()">
         <label class="custom-control-label" for="sortDeseendingTrue">Descending</label>
       </div>
       <div class="custom-control custom-radio custom-control-inline">
-        <input type="radio" id="sortDeseendingFalse" name="sortDeseending" class="custom-control-input" [value]="false" [(ngModel)]="settingsService.sortDescending">
+        <input type="radio" id="sortDeseendingFalse" name="sortDeseending" class="custom-control-input" [value]="false" [(ngModel)]="settingsService.sortDescending" (ngModelChange)="settingsService.updateSettings()">
         <label class="custom-control-label" for="sortDeseendingFalse">Ascending</label>
+      </div>
+    </fieldset>
+    <fieldset>
+      <div>
+        <input type="checkbox" id="stripLH" [(ngModel)]="settingsService.stripLH" (ngModelChange)="settingsService.updateSettings()"/>
+        <label for="stripLH">Strip Low/High</label>
+      </div>
+      <div>
+        <input type="checkbox" id="customFormatting" [(ngModel)]="settingsService.customFormatting" (ngModelChange)="settingsService.updateSettings()"/>
+        <label for="customFormatting">Custom Formatting</label>
+      </div>
+      <div class="formatting-area" *ngIf="settingsService.customFormatting">
+        <textarea [(ngModel)]="settingsService.format" (ngModelChange)="settingsService.updateSettings()"></textarea>
       </div>
     </fieldset>
     <hr/>

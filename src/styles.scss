@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 @import 'assets/styles/colors';
 @import '../node_modules/bootstrap/scss/bootstrap.scss';
+@import '../node_modules/sanitize.css/sanitize.css';
 
 //App wide customisations
 @import "../src/assets/styles/card.scss";
