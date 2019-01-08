@@ -14,11 +14,12 @@ export class SettingsService {
     sortDescending = true;
     customFormatting = false;
     stripLH = false;
-    format = `(FBE {Hb}/{WCC}/{Plt}) 
+    defaultFormat = `(FBE {Hb}/{WCC}/{Plt}) 
 (UEC {Na}/{K}/{Chlor} Cr{Creat} eGFR{eGFR})
 (LFT {ALP}/{GGT}/{ALT} Bili {Bili})
 (CMP {Corr. Ca}/{Mg}/{Phos})
 (CRP {CRP})`;
+    format = this.defaultFormat;
 
     constructor() {
       this.retrieveSettings();
@@ -55,8 +56,14 @@ export class SettingsService {
       localStorage.setItem('format', JSON.stringify(this.format));
       localStorage.setItem('stripLH', JSON.stringify(this.stripLH))
     }
+
     toggleSort() {
       this.sortDescending = !this.sortDescending;
+      this.updateSettings();
+    }
+    
+    resetFormatting() {
+      this.format = this.defaultFormat;
       this.updateSettings();
     }
 }

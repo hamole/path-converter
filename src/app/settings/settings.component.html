@@ -36,7 +36,9 @@
       </div>
       <div class="formatting-area" *ngIf="settingsService.customFormatting">
         <textarea [(ngModel)]="settingsService.format" (ngModelChange)="settingsService.updateSettings()"></textarea>
+        <button (click)="settingsService.resetFormatting()">Reset</button>
       </div>
+
     </fieldset>
     <hr/>
     <div *ngIf="converterService.uniqueTestTypes.length > 0">Select test types:</div>
