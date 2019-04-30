@@ -24,3 +24,18 @@
 legend {
   font-size: 1em;
 }
+
+.about-card {
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgba(255,255,255,0.4); /* Black w/ opacity */
+  .card {
+    margin: 5% auto; /* 15% from the top and centered */
+    width:70%; /* Could be more or less, depending on screen size */
+  }
+}

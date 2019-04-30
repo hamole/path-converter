@@ -32,7 +32,7 @@
       </div>
       <div>
         <input type="checkbox" id="customFormatting" [(ngModel)]="settingsService.customFormatting" (ngModelChange)="updateSettings()"/>
-        <label for="customFormatting">Custom Formatting</label>
+        <label for="customFormatting">Custom Formatting</label> <span class="info-button" (click)="toggleAbout()"><a href="javascript:void(0)">🛈 About</a></span>
       </div>
       <div class="formatting-area" *ngIf="settingsService.customFormatting">
         <textarea [(ngModel)]="settingsService.format" (ngModelChange)="updateSettings()"></textarea>
@@ -50,6 +50,44 @@
           {{testResult.type.name}}
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showAbout" class="about-card" (click)="modalClick('Out',$event)">
+  <div class="card">
+    <div class="card-header">
+      About Custom Formatting
+    </div>
+    <div class="card-body">
+      <p>
+      Custom formatting lets you group together test results in common abbreviations such as FBE results as Hb/WCC/Plts<br />
+      Groups are define with round brackets starting with ( and ending in ). Within groups individual tests results have marked with curly brackets "{{'{}'}}"<br />
+      For example to the FBE group looks like "{{'(FBE {Hb}/{WCC}/{Plts})'}}"<br />
+      If any of the tests are missing from a group, for example if Plts were not available, that group would not be included in the output.<br />
+      However, if you have checked "Include Other Tests", results which did not fit in a group will be included after the groups.<br />
+      <br />
+      When creating a custom format use the shortnames for tests when available. Available short names are:<br />
+      'Sodium': 'Na',<br />
+      'Potassium': 'K',<br />
+      'Chloride': 'Chlor',<br />
+      'Bicarbonate': 'Bicarb',<br />
+      'Creatinine': 'Creat',<br />
+      'Creatine Kinase': 'CK',<br />
+      'Troponin I': 'Trop',<br />
+      'Corrected Ca': 'Corr. Ca',<br />
+      'Calcium': 'Ca',<br />
+      'Magnesium': 'Mg',<br />
+      'Phosphate': 'Phos',<br />
+      'Albumin': 'Alb',<br />
+      'Haemoglobin': 'Hb',<br />
+      'White cell count': 'WCC',<br />
+      'Platelet count': 'Plt',<br />
+      'Neutrophils': 'Neuts',<br />
+      'CRP (Sensitive)': 'CRP',<br />
+      'Total Bilirubin': 'Bili',<br />
+      </p>
+      <button (click)="toggleAbout()">Close</button>
     </div>
   </div>
 </div>

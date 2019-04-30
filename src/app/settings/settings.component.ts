@@ -11,7 +11,7 @@ import { ExcludeTypesService } from './exclude-types.service';
     styleUrls: ['./settings.component.scss']
 })
 export class SettingsComponent implements OnInit {
-
+    showAbout: Boolean = false;
     constructor(public settingsService: SettingsService,
         public converterService: ConverterService,
         private excludeTypesService: ExcludeTypesService) {
@@ -30,5 +30,15 @@ export class SettingsComponent implements OnInit {
     updateSettings() {
       this.settingsService.updateSettings();
       this.converterService.convertPathologyResults();
+    }
+
+    toggleAbout() {
+      this.showAbout = !this.showAbout;
+    }
+
+    modalClick(message, event) {
+      if (event.target.className === 'about-card') {
+        this.showAbout = false;
+      }
     }
 }
