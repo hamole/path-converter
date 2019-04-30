@@ -26,4 +26,9 @@ export class SettingsComponent implements OnInit {
         this.excludeTypesService.updateExclusionStatus(testType);
         this.converterService.convertPathologyResults();
     }
+
+    updateSettings() {
+      this.settingsService.updateSettings();
+      this.converterService.convertPathologyResults();
+    }
 }

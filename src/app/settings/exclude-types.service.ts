@@ -24,7 +24,6 @@ export class ExcludeTypesService {
         } else {
             const existingTestType: TestType = _.find(this.excludedTypes, { name: testType.name });
             existingTestType.isExcluded = !existingTestType.isExcluded;
-            console.log(this.excludedTypes);
         }
     }
 }

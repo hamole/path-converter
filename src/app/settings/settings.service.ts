@@ -14,54 +14,59 @@ export class SettingsService {
     sortDescending = true;
     customFormatting = false;
     stripLH = false;
-    defaultFormat = `(FBE {Hb}/{WCC}/{Plt}) 
-(UEC {Na}/{K}/{Chlor} Cr{Creat} eGFR{eGFR})
+    defaultFormat = `(FBE {Hb}/{WCC}/{Plt})
+(UEC {Na}/{K}/{Chlor} Cr{Creat} eGFR {eGFR})
 (LFT {ALP}/{GGT}/{ALT} Bili {Bili})
 (CMP {Corr. Ca}/{Mg}/{Phos})
 (CRP {CRP})`;
     format = this.defaultFormat;
+    includeOthers: Boolean = true;
 
     constructor() {
       this.retrieveSettings();
     }
 
-    retrieveSettings(){
-      if(localStorage.getItem('delimiter') !== null){
+    retrieveSettings() {
+      if (localStorage.getItem('delimiter') !== null){
         this.delimiter = JSON.parse(localStorage.getItem('delimiter'));
       }
-      if(localStorage.getItem('excludedTests') !== null){
+      if (localStorage.getItem('excludedTests') !== null){
         this.excludedTests = JSON.parse(localStorage.getItem('excludedTests'));
       }
-      if(localStorage.getItem('sortDescending') !== null){
+      if (localStorage.getItem('sortDescending') !== null){
         this.sortDescending = JSON.parse(localStorage.getItem('sortDescending'));
       }
-      if(localStorage.getItem('customFormatting') !== null){
+      if (localStorage.getItem('customFormatting') !== null){
         this.customFormatting = JSON.parse(localStorage.getItem('customFormatting'));
       }
-      if(localStorage.getItem('format') !== null){
+      if (localStorage.getItem('format') !== null){
         this.format = JSON.parse(localStorage.getItem('format'));
       }
-      if(localStorage.getItem('stripLH') !== null){
+      if (localStorage.getItem('stripLH') !== null){
         this.stripLH = JSON.parse(localStorage.getItem('stripLH'));
+      }
+      if (localStorage.getItem('includeOthers') !== null){
+        this.includeOthers = JSON.parse(localStorage.getItem('includeOthers'));
       }
     }
 
-    updateSettings(){
+    updateSettings() {
       localStorage.setItem('delimiter', JSON.stringify(this.delimiter));
-      if(this.excludedTests){
+      if (this.excludedTests) {
        localStorage.setItem('excludedTests', JSON.stringify(this.excludedTests));
       }
       localStorage.setItem('sortDescending', JSON.stringify(this.sortDescending));
       localStorage.setItem('customFormatting', JSON.stringify(this.customFormatting));
       localStorage.setItem('format', JSON.stringify(this.format));
-      localStorage.setItem('stripLH', JSON.stringify(this.stripLH))
+      localStorage.setItem('stripLH', JSON.stringify(this.stripLH));
+      localStorage.setItem('includeOthers', JSON.stringify(this.includeOthers));
     }
 
     toggleSort() {
       this.sortDescending = !this.sortDescending;
       this.updateSettings();
     }
-    
+
     resetFormatting() {
       this.format = this.defaultFormat;
       this.updateSettings();
